@@ -27,7 +27,14 @@ describe('Exam 2A - AI', () => {
 	}));
 	it('should return the answer if word list contains an answer in the last', () => co(function*() {
 		const start = 'tail';
-		const words = ['more', 'cat', 'low'];
+		const words = ['more', 'cat', 'less', 'see', 'low'];
+		const expected = 'low';
+		const actual = yield runAI(start, words);
+		expect(actual).toEqual(expected);
+	}));
+	it('should return the answer if word list contains an answer in the last', () => co(function*() {
+		const start = 'tail';
+		const words = ['more', 'cat', 'less', 'see', 'low', 'word', 'dump'];
 		const expected = 'low';
 		const actual = yield runAI(start, words);
 		expect(actual).toEqual(expected);
