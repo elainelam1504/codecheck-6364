@@ -6,14 +6,16 @@ import java.lang.String;
 public class App {
 	public static void main(String[] args) throws Exception {
       Vector<String> Listword = new Vector<String>();
-      int len = args.length;
+      int len = args.length - 1;
+	  String startWord = args[0];
       int[][] vertex = new int[len][len];
 	  int[] dimIn = new int[len];
       int[] dimOut = new int[len];
       for (int i = 0; i < len; i++) {
-			Listword.add(args[i]);
+			Listword.add(args[i + 1]);
         	dimIn[i] = dimOut[i] = 0;
 	  }
+	  
       // create graph from list of word
       for( int i = 0; i< len; i++){
         vertex[i] = new int[len];
@@ -51,22 +53,24 @@ public class App {
       	IOException e = new IOException();
       	throw e;
       }else{
-        boolean ok = false; 
-        for(int i = len-1; i >= 0; i--){
+        boolean ok = false;
+		char lastChar = startWord.charAt(startWord.length() - 1);
+        for(int i = 0; i < len; i++){
         	/*System.out.print(dimIn[i]);	
           	System.out.print(" ");	
           	System.out.println(dimOut[i]);	*/
           //System.out.print(Listword.get(i));
-          if(dimOut[i] == 0){
+		  String si = Listword.get(i);
+		  char firstChar = si.charAt(0);
+          if(lastChar == firstChar){
             	System.out.print(Listword.get(i));
             	ok = true;
             	break;
           }
         }
         if(!ok){
-        	for(int i = len-1; i >= 0; i--){
-           	System.out.print(Listword.get(i));
-            }
+        	System.out.print(Listword.get(0));
+            
         }
       }
 	}

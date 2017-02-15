@@ -25,4 +25,12 @@ describe('Exam 2A - AI', () => {
 		const actual = yield runAI(start, words);
 		expect(actual).toEqual(expected);
 	}));
+	it('should return the answer if word list contains an answer in the last', () => co(function*() {
+		const start = 'tail';
+		const words = ['more', 'cat', 'low'];
+		const expected = 'low';
+		const actual = yield runAI(start, words);
+		expect(actual).toEqual(expected);
+	}));
+	
 });
