@@ -34,4 +34,21 @@ describe('Exam 2A - Framework', () => {
 		const actual = yield runFramework(ai1, ai2, start, words);
 		_.zip(expected, actual).forEach(([e, a]) => expect(a).toMatch(e) );
 	}));
+	
+	it('should solve a simple case and the second player should win', () => co(function* () {
+		const ai1 = './ai.sh';
+		const ai2 = './ai.sh';
+		const start = 'shiritori';
+		const words = ['internet', 'tail', 'told', 'dump', 'low', 'pow'];
+		const expected = [
+			/^FIRST \(OK\): internet$/,
+			/^SECOND \(OK\): told$/,
+			/^FIRST \(OK\): dump$/,
+			/^SECOND \(OK\): pow$/,
+			/^FIRST \(NG\):/,
+			/^WIN - SECOND$/
+		];
+		const actual = yield runFramework(ai1, ai2, start, words);
+		_.zip(expected, actual).forEach(([e, a]) => expect(a).toMatch(e) );
+	}));
 });

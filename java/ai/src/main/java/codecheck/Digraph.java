@@ -157,17 +157,34 @@ public class Digraph {
 			marked = new boolean[V];
 			double maxPro = -1.0;
 			int maxIndex = -1;
+			double executeTime = 0.0;
+			int numCalculated = 0;
 			for(int i = 0; i< V; i++){
 				String si = listWord.get(i);
 				char firstChar = si.charAt(0);
 				if(lastChar == firstChar){
+					long startTime = System.nanoTime();
+					
 					double winPro = CalculateWinProb(i);
-					//System.out.print(si);
+					
+					long endTime = System.nanoTime();
+					executeTime += (endTime - startTime)/1000000.0;
+					numCalculated++;
+					
+					//System.out.println((endTime - startTime)/1000000.0);
+					//System.out.println(si);
 					//System.out.println(winPro);
 				
 					if(winPro > maxPro){
 						maxPro = winPro;
 						maxIndex = i;
+					}
+					if(maxPro == 1.0){
+						//System.out.print("Break");
+						break;
+					}
+					if(executeTime + executeTime/numCalculated >= 5000){
+						break;
 					}
 				}
 			}

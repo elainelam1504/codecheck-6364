@@ -57,6 +57,14 @@ describe('Exam 2A - AI', () => {
 	}));
 	
 	it('should return the answer which large word list', () => co(function*() {
+		const start = 'heal';
+		const words = ['ll','ll','ll','ll','ll','ll','ll','ll','ll','ll'];
+		const expected = 'll';
+		const actual = yield runAI(start, words);
+		expect(actual).toEqual(expected);
+	}));
+	
+	it('should return the answer which large word list', () => co(function*() {
 		const start = 'PP';
 		const words = ['President', 'Donald', 'goes', 'you', 'Trump', 'rejected', 'the', 'long-established', 'US', 'framework', 'for', 'Middle', 'east', 'peacemaking', 'at', 'a', 'White', 'House', 'visit', 'with', 'Israeli', 'Prime', 'Minister', 'Benjamin', 'Netanyahu', 'Wednesday', 'this', 'see'];
 		const expected = 'President';
