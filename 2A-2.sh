@@ -1,0 +1,1 @@
+./ai.sh shiritori internet tail grep less telnet sed

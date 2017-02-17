@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Digraph {
    
+    private static final int MAX_DEPTH = 10;
     private final int V;         // number of vertices
     private int E;               // number of edges
     private Vector<Vector<Integer>> adj;  // adj[v] = adjacency list for vertex v
@@ -12,8 +13,9 @@ public class Digraph {
 	private String startWord;
 	private boolean[] marked;  // marked[v] = true if v is reachable
 	private double[] probability; //probability[v] = win probability of vertex v
-	private int winPath;        //number of win path( length of path is 2n)
-	private int losePath;       //num ber of lose path( length of path is 2n+1)
+	private int winPath;        //number of win path( length of path is 2n) 100% win
+	private int losePath;       //number of lose path( length of path is 2n+1) 100% lose
+	private int unknownPath;    //num of unknown Path 50% win 50% lose
 	
     
     
@@ -21,10 +23,13 @@ public class Digraph {
    // init graph from list of words.
     public Digraph(String[] parameters) {
 		if(parameters.length == 0){
+			//System.out.println(parameters);
+			//System.out.println(parameters.length);
 			throw new IllegalArgumentException("empty parameters");
 		}else{
-			
+			//System.out.println(parameters.length);
 			startWord = parameters[0];
+			//System.out.println(startWord);
 			V = parameters.length - 1;
 			E = 0;
 			indegree = new int[V];
@@ -35,7 +40,7 @@ public class Digraph {
 	        adj = new Vector<Vector<Integer>>();
 			// create graph from list of word
 			for( int i = 0; i< V; i++){
-				//System.out.print(listWord.get(i));
+				//System.out.println(listWord.get(i));
 				Vector<Integer> tmp = new Vector<Integer>();
 				for(int j = 0; j< V; j++){
 					if(i == j){
@@ -91,6 +96,24 @@ public class Digraph {
 	}
 	
 	private void dfs( int v, int len) { 
+		if(len == MAX_DEPTH){
+			if(outdegree(v) == 0){
+			//end node, 100% win
+				winPath++;
+			}else{
+			//
+				for (int w : this.adj(v)) {
+					if (!marked[w]) {
+					// unknown Path 50% win, 50% lose
+						unknownPath++;
+						return;
+					}
+				}
+				// adj nodes of v are marked => v is end node, 100% win
+				winPath++;
+			}
+			return;
+		}
 		marked[v] = true;
 		boolean ok = true;
         for (int w : this.adj(v)) {
@@ -102,25 +125,25 @@ public class Digraph {
 		marked[v] = false;
 		if(ok && len % 2 == 0){
 			//win path
-			//last node of path and length of path is 2n
+			//last node of path and length of path is 2n, 100 win
 			winPath++;
 		}else if(ok && len % 2 == 1){
 			//lose path
-			//last node of path and length of path is 2n + 1
+			//last node of path and length of path is 2n + 1, 100 lose
 			losePath++;
 		}
     }
 	
 	private double CalculateWinProb(int s) {
-		winPath = losePath = 0;
+		winPath = losePath = unknownPath = 0;
 		for(int i = 0; i< V; i++){
 			marked[i] = false;
 		}
         dfs(s, 0);
-		if(winPath + losePath == 0){
+		if(winPath + losePath + unknownPath == 0){
 			return 1.0;
 		}else{
-			return winPath * 1.0/(winPath + losePath);
+			return (winPath  + 0.5 * unknownPath)/(winPath + unknownPath + losePath);
 		}		
     }
 	
@@ -128,6 +151,8 @@ public class Digraph {
 	public void Play(){
 		if( printZeroOutDegree() == 0){
 			// calculate probability of win in each word.
+			//System.out.println("calculate probability");
+			//System.out.println(V);
 			char lastChar = startWord.charAt(startWord.length() - 1);
 			marked = new boolean[V];
 			double maxPro = -1.0;
@@ -137,6 +162,9 @@ public class Digraph {
 				char firstChar = si.charAt(0);
 				if(lastChar == firstChar){
 					double winPro = CalculateWinProb(i);
+					//System.out.print(si);
+					//System.out.println(winPro);
+				
 					if(winPro > maxPro){
 						maxPro = winPro;
 						maxIndex = i;
@@ -145,6 +173,8 @@ public class Digraph {
 			}
 			if(maxIndex >= 0){
 				System.out.print(listWord.get(maxIndex));
+				//System.out.print(maxPro);
+				
 			}else{
 				//lose
 				System.out.print("Lose");
